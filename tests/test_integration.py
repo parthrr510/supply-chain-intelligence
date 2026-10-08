@@ -15,6 +15,7 @@ dummy_model_path = Path(os.environ["MODEL_PATH"])
 if not dummy_model_path.exists():
     dummy_model_path.parent.mkdir(parents=True, exist_ok=True)
     import joblib
+
     joblib.dump("dummy", dummy_model_path)
     # We will mock the prediction service inner call to avoid needing a real model artifact
 
