@@ -52,7 +52,6 @@ def test_db():
 
     yield
 
-
     # teardown
     if db_path.exists():
         db_path.unlink()
@@ -73,8 +72,14 @@ def client(test_db, tmp_path_factory):
         patch(
             "api_interface.services.prediction_service.prediction_service.predict_delay"
         ) as mock_predict,
-        patch("api_interface.repositories.shipment_repository.get_db_connection", return_value=conn),
-        patch("api_interface.repositories.route_repository.get_db_connection", return_value=conn),
+        patch(
+            "api_interface.repositories.shipment_repository.get_db_connection",
+            return_value=conn,
+        ),
+        patch(
+            "api_interface.repositories.route_repository.get_db_connection",
+            return_value=conn,
+        ),
         patch("api_interface.api.routers.dq.settings.dq_report_path", str(tmp_dq_path)),
     ):
         mock_predict.return_value = {

@@ -10,17 +10,18 @@ from ai_agent.assistant.tools import get_gemini_tools
 
 logger = logging.getLogger(__name__)
 
+
 class AssistantAgent:
-    def __init__(self, model_id: str = "gemini-3.5-flash-lite", api_key: str | None = None):
+    def __init__(
+        self, model_id: str = "gemini-3.5-flash-lite", api_key: str | None = None
+    ):
         self.model_id = model_id
-        
+
         # Initialize Langchain Chat Model
         self.llm = ChatGoogleGenerativeAI(
-            model=model_id,
-            api_key=api_key,
-            temperature=0.0
+            model=model_id, api_key=api_key, temperature=0.0
         )
-        
+
         self.tools = get_gemini_tools()
 
         system_instruction = (
@@ -33,15 +34,13 @@ class AssistantAgent:
         )
 
         self.agent_executor = create_agent(
-            model=self.llm, 
-            tools=self.tools,
-            system_prompt=system_instruction
+            model=self.llm, tools=self.tools, system_prompt=system_instruction
         )
 
     def query(self, user_message: str, session_id: str | None = None) -> str:
         """Process a user query using Langchain AgentExecutor."""
         session_id = session_id or str(uuid.uuid4())
-        
+
         log_entry = {
             "session_id": session_id,
             "user_prompt": user_message,
@@ -49,20 +48,30 @@ class AssistantAgent:
         }
 
         try:
-            result = self.agent_executor.invoke({"messages": [HumanMessage(content=user_message)]})
-            
+            result = self.agent_executor.invoke(
+                {"messages": [HumanMessage(content=user_message)]}
+            )
+
             # Log intermediate steps (tool calls)
             for message in result.get("messages", []):
                 if hasattr(message, "tool_calls") and message.tool_calls:
                     for tool_call in message.tool_calls:
-                        log_entry["tool_calls"].append({
-                            "tool_name": tool_call.get("name"),
-                            "tool_arguments": tool_call.get("args", {})
-                        })
-                
+                        log_entry["tool_calls"].append(
+                            {
+                                "tool_name": tool_call.get("name"),
+                                "tool_arguments": tool_call.get("args", {}),
+                            }
+                        )
+
             final_content = result["messages"][-1].content
             if isinstance(final_content, list):
-                final_answer = " ".join([c.get("text", "") for c in final_content if c.get("type") == "text"])
+                final_answer = " ".join(
+                    [
+                        c.get("text", "")
+                        for c in final_content
+                        if c.get("type") == "text"
+                    ]
+                )
             else:
                 final_answer = final_content
         except Exception as e:

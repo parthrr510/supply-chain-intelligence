@@ -14,7 +14,9 @@ class ModelUnavailableError(Exception):
 
 
 class PredictionService:
-    def __init__(self, model_path: str | Path = "machine_learning/artifacts/delay_model.joblib"):
+    def __init__(
+        self, model_path: str | Path = "machine_learning/artifacts/delay_model.joblib"
+    ):
         self.model_path = Path(model_path)
         self.model = None
         self.model_version = "1.0"

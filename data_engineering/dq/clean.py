@@ -113,7 +113,9 @@ def clean_shipments(
                 "SHIPMENTS_NEGATIVE_WEIGHT_FIXED",
                 quarantine_dir / "shipments_quarantined.csv",
             )
-            df.loc[negative_weight, "weight_tons"] = df.loc[negative_weight, "weight_tons"].abs()
+            df.loc[negative_weight, "weight_tons"] = df.loc[
+                negative_weight, "weight_tons"
+            ].abs()
 
     # Note: Missing actual dates are valid. High weight is info, so no quarantine.
 

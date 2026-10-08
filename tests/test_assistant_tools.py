@@ -57,7 +57,9 @@ def test_get_route_stats_success(mock_get_route_stats):
         "on_time_rate": 0.8,
     }
 
-    result = get_route_stats.invoke({"origin": "CNSHG", "destination": "USLAX", "date_range": "Q1"})
+    result = get_route_stats.invoke(
+        {"origin": "CNSHG", "destination": "USLAX", "date_range": "Q1"}
+    )
 
     assert "error" not in result
     assert result["shipment_count"] == 10

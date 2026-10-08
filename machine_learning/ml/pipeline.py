@@ -47,7 +47,12 @@ def get_preprocessing_pipeline() -> Pipeline:
     pipeline = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
-            ("classifier", RandomForestClassifier(n_estimators=100, class_weight="balanced", random_state=42)),
+            (
+                "classifier",
+                RandomForestClassifier(
+                    n_estimators=100, class_weight="balanced", random_state=42
+                ),
+            ),
         ]
     )
 

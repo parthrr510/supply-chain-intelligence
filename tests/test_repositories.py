@@ -27,8 +27,14 @@ def mock_db_conn():
     """)
 
     with (
-        patch("api_interface.repositories.shipment_repository.get_db_connection", return_value=conn),
-        patch("api_interface.repositories.route_repository.get_db_connection", return_value=conn),
+        patch(
+            "api_interface.repositories.shipment_repository.get_db_connection",
+            return_value=conn,
+        ),
+        patch(
+            "api_interface.repositories.route_repository.get_db_connection",
+            return_value=conn,
+        ),
     ):
         yield conn
 

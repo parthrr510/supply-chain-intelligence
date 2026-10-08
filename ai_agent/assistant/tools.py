@@ -86,31 +86,36 @@ def predict_delay(shipment_id: str) -> dict[str, Any]:
 
 
 import os
+
 import duckdb
+
 
 @tool
 def search_ports(query: str) -> dict[str, Any]:
     """Search for the exact UN/LOCODE port code for a given city or country name.
-    
+
     Args:
         query: The name of the city or port (e.g. 'Shanghai', 'Rotterdam')
     """
     try:
-        db_path = os.getenv("DATABASE_PATH", "data_engineering/data/curated/supply_chain.db")
+        db_path = os.getenv(
+            "DATABASE_PATH", "data_engineering/data/curated/supply_chain.db"
+        )
         conn = duckdb.connect(db_path, read_only=True)
         # Search by name ignoring case
         df = conn.execute(
             "SELECT port_code, name, country FROM ports WHERE name ILIKE ?",
-            [f"%{query}%"]
+            [f"%{query}%"],
         ).df()
         conn.close()
-        
+
         if df.empty:
             return {"error": f"No ports found matching '{query}'"}
-        
+
         return {"ports": df.to_dict(orient="records")}
     except Exception as e:
         return {"error": str(e)}
+
 
 def get_gemini_tools() -> list:
     """Return the list of tool functions for Langchain."""

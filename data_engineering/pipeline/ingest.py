@@ -144,7 +144,9 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Run the DuckDB ingestion pipeline")
-    parser.add_argument("--db-path", default="data_engineering/data/curated/supply_chain.db")
+    parser.add_argument(
+        "--db-path", default="data_engineering/data/curated/supply_chain.db"
+    )
     parser.add_argument("--raw-dir", default="data_engineering/data-files")
     parser.add_argument("--quarantine-dir", default="data_engineering/data/quarantine")
     args = parser.parse_args()

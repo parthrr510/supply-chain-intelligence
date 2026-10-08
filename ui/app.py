@@ -1,8 +1,8 @@
-import streamlit as st
-import requests
-import json
 import os
 import sys
+
+import requests
+import streamlit as st
 
 # Ensure the working directory is the project root so relative paths work
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +24,7 @@ API_BASE_URL = os.getenv("API_URL", "http://localhost:8000")
 # Initialize the AI Agent in session state
 if "agent" not in st.session_state:
     st.session_state.agent = AssistantAgent()
-    
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -33,7 +33,9 @@ page = st.sidebar.radio("Select a page", ["AI Assistant", "API Explorer"])
 
 if page == "AI Assistant":
     st.title("Supply Chain AI Assistant")
-    st.markdown("Ask questions about your shipments, route statistics, or predict delays!")
+    st.markdown(
+        "Ask questions about your shipments, route statistics, or predict delays!"
+    )
 
     # Display chat messages
     for msg in st.session_state.messages:
@@ -46,18 +48,23 @@ if page == "AI Assistant":
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-                response = st.session_state.agent.query(prompt, session_id="streamlit-session")
-                st.markdown(response)
-        
+        with st.chat_message("assistant"), st.spinner("Thinking..."):
+            response = st.session_state.agent.query(
+                prompt, session_id="streamlit-session"
+            )
+            st.markdown(response)
+
         st.session_state.messages.append({"role": "assistant", "content": response})
 
 elif page == "API Explorer":
     st.title("API Explorer")
-    st.markdown(f"Directly test the FastAPI endpoints. (Using base URL: `{API_BASE_URL}`)")
+    st.markdown(
+        f"Directly test the FastAPI endpoints. (Using base URL: `{API_BASE_URL}`)"
+    )
 
-    tab1, tab2, tab3, tab4 = st.tabs(["Health & DQ", "Shipments", "Route Stats", "Predict Delay"])
+    tab1, tab2, tab3, tab4 = st.tabs(
+        ["Health & DQ", "Shipments", "Route Stats", "Predict Delay"]
+    )
 
     with tab1:
         st.subheader("System Health")
@@ -67,7 +74,7 @@ elif page == "API Explorer":
                 st.json(res.json())
             except Exception as e:
                 st.error(f"Error: {e}")
-                
+
         st.subheader("Data Quality Report")
         if st.button("Get DQ Report"):
             try:
@@ -81,12 +88,15 @@ elif page == "API Explorer":
         col1, col2 = st.columns(2)
         page_num = col1.number_input("Page", min_value=1, value=1)
         page_size = col2.number_input("Page Size", min_value=1, max_value=100, value=10)
-        
+
         col3, col4, col5 = st.columns(3)
         origin = col3.text_input("Origin Port (optional)")
         dest = col4.text_input("Destination Port (optional)")
-        status = col5.selectbox("Status", ["Any", "In Transit", "Delivered", "Pending", "Cancelled", "Delayed"])
-        
+        status = col5.selectbox(
+            "Status",
+            ["Any", "In Transit", "Delivered", "Pending", "Cancelled", "Delayed"],
+        )
+
         col6, col7 = st.columns(2)
         start_date = col6.date_input("Start Date (optional)", value=None)
         end_date = col7.date_input("End Date (optional)", value=None)
@@ -94,12 +104,17 @@ elif page == "API Explorer":
         if st.button("Fetch Shipments"):
             try:
                 params = {"page": page_num, "page_size": page_size}
-                if origin: params["origin"] = origin
-                if dest: params["destination"] = dest
-                if status != "Any": params["status"] = status
-                if start_date: params["start_date"] = start_date.isoformat()
-                if end_date: params["end_date"] = end_date.isoformat()
-                
+                if origin:
+                    params["origin"] = origin
+                if dest:
+                    params["destination"] = dest
+                if status != "Any":
+                    params["status"] = status
+                if start_date:
+                    params["start_date"] = start_date.isoformat()
+                if end_date:
+                    params["end_date"] = end_date.isoformat()
+
                 res = requests.get(f"{API_BASE_URL}/shipments", params=params)
                 st.json(res.json())
             except Exception as e:
@@ -130,7 +145,9 @@ elif page == "API Explorer":
         p_shp_id = st.text_input("Target Shipment ID", value="SHP-1")
         if st.button("Predict"):
             try:
-                res = requests.post(f"{API_BASE_URL}/predict-delay", json={"shipment_id": p_shp_id})
+                res = requests.post(
+                    f"{API_BASE_URL}/predict-delay", json={"shipment_id": p_shp_id}
+                )
                 st.json(res.json())
             except Exception as e:
                 st.error(f"Error: {e}")
