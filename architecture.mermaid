@@ -1,0 +1,16 @@
+graph TD
+    A[Raw CSVs] --> B[Standalone DQ]
+    
+    B -->|Generates| C[DQ Report]
+    B -->|Outputs| D[Quarantine]
+    B --> E[Cleaning / Pipeline]
+    
+    E --> F[(DuckDB)]
+    
+    F --> G[FastAPI]
+    F --> H[ML PredictionService]
+    F --> I[GenAI Tools]
+    
+    I --> J[LangChain / Gemini]
+
+    style F fill:#f9f,stroke:#333,stroke-width:2px;

@@ -1,0 +1,45 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Data
+data_engineering/data/curated/*
+!data_engineering/data/curated/.gitkeep
+data_engineering/data/quarantine/*
+!data_engineering/data/quarantine/.gitkeep
+data_engineering/data/reports/*
+!data_engineering/data/reports/.gitkeep
+
+# ML Artifacts
+machine_learning/artifacts/*
+!machine_learning/artifacts/.gitkeep
+
+# Prompts and Specs
+PromptsAndSpecs/
+
+# Jupyter
+.ipynb_checkpoints
+
+# pytest
+.pytest_cache
+
+# Ruff
+.ruff_cache
+
+# Packaging
+*.egg-info/
+*.egg
+
+# OS & Databases
+.DS_Store
+*.db
+*.duckdb

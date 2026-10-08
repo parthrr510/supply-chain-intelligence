@@ -1,0 +1,43 @@
+[project]
+name = "supply-chain-intelligence"
+version = "0.1.0"
+description = "Supply Chain Intelligence Platform"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "duckdb",
+    "pandas",
+    "scikit-learn",
+    "google-genai",
+    "pydantic",
+    "pydantic-settings",
+    "python-dotenv",
+    "langchain",
+    "langchain-google-genai",
+    "streamlit",
+    "requests",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "jupyter",
+    "httpx",
+    "matplotlib",
+    "seaborn",
+]
+
+[tool.setuptools.packages.find]
+include = ["api_interface*", "data_engineering*", "machine_learning*", "ai_agent*"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+ignore = ["BLE001", "F841", "DTZ001", "RUF059", "SIM102"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

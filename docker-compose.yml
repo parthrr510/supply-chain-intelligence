@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - APP_ENV=development
+      - LOG_LEVEL=INFO
+      - DATABASE_PATH=data_engineering/data/curated/supply_chain.db
+      - MODEL_PATH=machine_learning/artifacts/delay_model.joblib
+    env_file:
+      - .env
+
+  ui:
+    build: .
+    command: streamlit run ui/app.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    environment:
+      - API_URL=http://api:8000
+    env_file:
+      - .env
+    depends_on:
+      - api
